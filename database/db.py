@@ -8,5 +8,5 @@ db = Gino()
 
 async def connect_db() -> None:
     await db.set_bind(POSTGRES_URI)
-    logging.info('Connected DB')
     await db.gino.create_all()
+    logging.info('Connected DB')

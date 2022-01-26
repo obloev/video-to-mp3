@@ -7,12 +7,12 @@ from utils.check_membership import check_membership
 subscribe_cd = CallbackData('subscribe', 'action')
 
 
-@dp.callback_query_handlers(subscribe_cd.filter(action='confirm'))
-def check_membership_data(query: types.CallbackQuery) -> None:
+@dp.callback_query_handler(subscribe_cd.filter(action='confirm'))
+async def check_membership_data(query: types.CallbackQuery) -> None:
     await query.answer()
     is_member = await check_membership(query.from_user.id)
     if not is_member:
-        query.answer('No member', show_alert=True)
+        await query.answer('No member', show_alert=True)
         return
     await query.message.delete()
-    await query.answer('OKK')
+    await query.answer('welcome')

@@ -8,7 +8,6 @@ class User(db.Model):
 
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.BigInteger())
-    language = db.Column(db.String())
     conversions = db.Column(db.Integer(), default=0)
 
     def __str__(self):
@@ -37,17 +36,6 @@ class User(db.Model):
     async def users_count() -> int:
         count = await db.func.count(User.id).gino.scalar()
         return count
-
-    @staticmethod
-    async def set_language(language: str):
-        user_id = types.User.get_current().id
-        user = await User.get_user(user_id)
-        return await user.update(language=language).apply()
-
-    @staticmethod
-    async def get_lang(user_id: int) -> str:
-        user = await User.get_user(user_id)
-        return user.language
 
     @staticmethod
     async def add_conversion():

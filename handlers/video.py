@@ -2,25 +2,30 @@ from aiogram import types
 from aiogram.utils.callback_data import CallbackData
 
 from keyboards.filename import filename_keyboard
+from keyboards.subscribe import subscribe_keyboard
 from loader import dp, bot
+from utils.check_membership import check_membership
 
 filename_cd = CallbackData('filename', 'bool', 'name')
 
 
 @dp.message_handler(content_types=types.ContentTypes.VIDEO)
-def get_video(message: types.Message):
+async def get_video(message: types.Message):
+    if not await check_membership(message.from_user.id):
+        await message.answer('please subscribe', reply_markup=subscribe_keyboard())
+        return
     video = message.video
     file_name = video.file_name
     mes: types.Message = await message.answer('Downloading ...')
     await video.download()
-    mes.edit_text('Converting ...')
+    await mes.edit_text('Converting ...')
     # convert
-    mes.delete()
+    await mes.delete()
     await message.answer('Name?', reply_markup=filename_keyboard(file_name))
 
 
-@dp.callback_query_handlers(filename_cd.filter(bool=True))
-def get_filename(query: types.CallbackQuery, callback_data: dict):
+@dp.callback_query_handler(filename_cd.filter(bool=True))
+async def get_filename(query: types.CallbackQuery):
     await query.answer()
     await query.answer('Type Name?')
     await query.message.delete()
@@ -29,7 +34,7 @@ def get_filename(query: types.CallbackQuery, callback_data: dict):
 
 # state
 @dp.callback_query_handlers(filename_cd.filter(bool=False))
-def send_mp3(query: types.CallbackQuery, callback_data: dict):
+async def send_mp3(query: types.CallbackQuery, callback_data: dict):
     await query.answer()
     await query.message.delete()
     filename = callback_data['name']

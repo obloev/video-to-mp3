@@ -8,5 +8,3 @@ ADMIN = int(os.getenv('ADMIN'))
 POSTGRES_URI = os.getenv('POSTGRES_URI')
 CHANNEL = os.getenv('CHANNEL')
 JOINCHAT_URL = os.getenv('JOINCHAT_URL')
-
-print(POSTGRES_URI)
