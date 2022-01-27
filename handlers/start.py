@@ -11,7 +11,7 @@ async def start(message: types.Message):
     user = message.from_user
     if await User.get_user(user.id) is None:
         await User.create_user()
-    if not check_membership(user.id):
+    if not await check_membership(user.id):
         await message.answer('...', reply_markup=subscribe_keyboard())
         return
     await message.answer('OKKK')

@@ -1,12 +1,18 @@
-from aiogram import types
-from aiogram.utils.callback_data import CallbackData
+import os
 
-from keyboards.filename import filename_keyboard
+from aiogram import types
+from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters.state import StatesGroup, State
+
+from keyboards.filename import filename_keyboard, filename_cd
 from keyboards.subscribe import subscribe_keyboard
 from loader import dp, bot
 from utils.check_membership import check_membership
+from utils.to_mp3 import to_mp3
 
-filename_cd = CallbackData('filename', 'bool', 'name')
+
+class Audio(StatesGroup):
+    get_name = State()
 
 
 @dp.message_handler(content_types=types.ContentTypes.VIDEO)
@@ -15,29 +21,37 @@ async def get_video(message: types.Message):
         await message.answer('please subscribe', reply_markup=subscribe_keyboard())
         return
     video = message.video
-    file_name = video.file_name
-    mes: types.Message = await message.answer('Downloading ...')
-    await video.download()
+    mes = await message.answer('Downloading ...')
+    await video.download(destination_dir=f'media/{message.from_user.id}')
+    file = os.listdir(f'media/{message.from_user.id}/videos')[0]
     await mes.edit_text('Converting ...')
-    # convert
+    to_mp3(message.from_user.id, file)
     await mes.delete()
-    await message.answer('Name?', reply_markup=filename_keyboard(file_name))
+    await message.answer('Name?', reply_markup=filename_keyboard())
 
 
 @dp.callback_query_handler(filename_cd.filter(bool=True))
-async def get_filename(query: types.CallbackQuery):
+async def get_filename_callback(query: types.CallbackQuery):
     await query.answer()
     await query.answer('Type Name?')
     await query.message.delete()
-    # set state
+    await Audio.get_name.set()
 
 
-# state
-@dp.callback_query_handlers(filename_cd.filter(bool=False))
-async def send_mp3(query: types.CallbackQuery, callback_data: dict):
+@dp.message_handler(state=Audio.get_name)
+async def get_filename(message: types.Message, state: FSMContext):
+    filename: str = f'media/{message.from_user.id}/audios/file_0.mp3'
+    new_filename = f'media/{message.from_user.id}/audios/{message.text}.mp3'
+    os.rename(filename, new_filename)
+    await bot.send_audio(message.from_user.id, new_filename)
+    await state.finish()
+
+
+@dp.callback_query_handler(filename_cd.filter(bool=False))
+async def send_mp3(query: types.CallbackQuery):
     await query.answer()
     await query.message.delete()
-    filename = callback_data['name']
+    filename: str = f'media/{query.from_user.id}/audios/file_0.mp3'
     mes: types.Message = await query.answer('sending ...')
     await bot.send_chat_action(query.from_user.id, 'upload_voice')
     await bot.send_audio(query.from_user.id, filename)

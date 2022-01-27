@@ -1,10 +1,11 @@
 from aiogram import types
+from aiogram.utils.callback_data import CallbackData
 
-from handlers.video import filename_cd
+filename_cd = CallbackData('filename', 'bool', 'name')
 
 
-def filename_keyboard(filename) -> types.InlineKeyboardMarkup:
+def filename_keyboard() -> types.InlineKeyboardMarkup:
     return types.InlineKeyboardMarkup().row(
-        types.InlineKeyboardButton('Yes', callback_data=filename_cd.new(bool=True, name=filename)),
-        types.InlineKeyboardButton('No', callback_data=filename_cd.new(bool=False, name=filename)),
+        types.InlineKeyboardButton('Yes', callback_data=filename_cd.new(bool=True)),
+        types.InlineKeyboardButton('No', callback_data=filename_cd.new(bool=False)),
     )

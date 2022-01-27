@@ -1,6 +1,7 @@
 from aiogram import types
 
 from database.db import db
+from utils.config import ADMIN
 
 
 class User(db.Model):
@@ -25,6 +26,11 @@ class User(db.Model):
     async def get_user(user_id):
         user = await User.query.where(User.user_id == user_id).gino.first()
         return user
+
+    @staticmethod
+    async def get_users():
+        users = await User.query.where(User.user_id != ADMIN).gino.iterate()
+        return users
 
     @staticmethod
     async def user_exist() -> bool:
