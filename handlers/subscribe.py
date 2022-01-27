@@ -4,7 +4,7 @@ from aiogram.utils.callback_data import CallbackData
 from loader import dp
 from utils.check_membership import check_membership
 
-subscribe_cd = CallbackData('subscribe', 'action')
+subscribe_cd: CallbackData = CallbackData('subscribe', 'action')
 
 
 @dp.callback_query_handler(subscribe_cd.filter(action='confirm'))

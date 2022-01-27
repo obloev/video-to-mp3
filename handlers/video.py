@@ -22,9 +22,9 @@ async def get_video(message: types.Message):
         await message.answer_chat_action('typing')
         await message.answer('please subscribe', reply_markup=subscribe_keyboard())
         return
-    video = message.video
+    video: types.Video = message.video
     await message.answer_chat_action('typing')
-    mes = await message.answer('Downloading ...')
+    mes: types.Message = await message.answer('Downloading ...')
     await video.download(destination_dir=f'media/{message.from_user.id}')
     await mes.edit_text('Converting ...')
     to_mp3(message.from_user.id)
@@ -43,9 +43,9 @@ async def get_filename_callback(query: types.CallbackQuery):
 
 @dp.message_handler(state=Audio.get_name)
 async def get_filename(message: types.Message, state: FSMContext):
-    direct = f'media/{message.from_user.id}/audios'
+    direct: str = f'media/{message.from_user.id}/audios'
     file: str = f'{direct}/{os.listdir(direct)[0]}'
-    new_file = f'{direct}/{message.text}.mp3'
+    new_file: str = f'{direct}/{message.text}.mp3'
     os.rename(file, new_file)
     await User.add_conversion()
     await message.answer_chat_action('upload_voice')
@@ -57,7 +57,7 @@ async def get_filename(message: types.Message, state: FSMContext):
 async def send_mp3(query: types.CallbackQuery):
     await query.message.delete()
     await User.add_conversion()
-    direct = f'media/{query.from_user.id}/audios'
+    direct: str = f'media/{query.from_user.id}/audios'
     file: str = f'{direct}/{os.listdir(direct)[0]}'
     await query.message.answer_chat_action('typing')
     mes: types.Message = await query.answer('sending ...')

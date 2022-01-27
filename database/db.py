@@ -3,7 +3,7 @@ from gino import Gino
 
 from utils.config import POSTGRES_URI
 
-db = Gino()
+db: Gino = Gino()
 
 
 async def connect_db() -> None:

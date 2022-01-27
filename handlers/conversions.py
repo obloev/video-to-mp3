@@ -1,4 +1,4 @@
-from aiogram import types
+from aiogram.types import Message
 
 from database.models import User
 from loader import dp
@@ -6,12 +6,11 @@ from utils.config import ADMIN
 
 
 @dp.message_handler(lambda mes: mes.from_user.id == ADMIN, commands=['conversions'])
-async def conversions_handler(message: types.Message):
+async def conversions_handler(message: Message):
     await message.answer_chat_action('typing')
-    mes = await message.answer('Counting ...')
+    mes: Message = await message.answer('Counting ...')
     users = await User.get_users()
-    conversions = 0
+    conversions: int = 0
     for user in users:
         conversions += user.conversions
     await mes.edit_text(str(conversions))
-

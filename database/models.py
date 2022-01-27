@@ -5,7 +5,7 @@ from utils.config import ADMIN
 
 
 class User(db.Model):
-    __tablename__ = 'users'
+    __tablename__: str = 'users'
 
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.BigInteger())

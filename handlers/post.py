@@ -9,7 +9,7 @@ from utils.config import ADMIN
 
 
 class Post(StatesGroup):
-    get_post = State()
+    get_post: State = State()
 
 
 @dp.message_handler(state=Post.get_post)
