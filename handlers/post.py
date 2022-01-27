@@ -17,6 +17,7 @@ async def send_post(message: types.Message, state: FSMContext):
     users = await User.get_users()
     sent = 0
     failed = 0
+    await message.answer_chat_action('typing')
     mes = await message.answer('sending')
     for user in users:
         try:
@@ -32,5 +33,6 @@ async def send_post(message: types.Message, state: FSMContext):
 
 @dp.message_handler(lambda mes: mes.from_user.id == ADMIN, commands=['post'])
 async def post(message: types.Message):
+    await message.answer_chat_action('typing')
     await message.answer('send post')
     await Post.get_post.set()

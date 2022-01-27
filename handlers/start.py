@@ -14,4 +14,5 @@ async def start(message: types.Message):
     if not await check_membership(user.id):
         await message.answer('...', reply_markup=subscribe_keyboard())
         return
+    await message.answer_chat_action('typing')
     await message.answer('OKKK')

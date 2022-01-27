@@ -7,6 +7,7 @@ from utils.config import ADMIN
 
 @dp.message_handler(lambda mes: mes.from_user.id == ADMIN, commands=['conversions'])
 async def conversions_handler(message: types.Message):
+    await message.answer_chat_action('typing')
     mes = await message.answer('Counting ...')
     users = await User.get_users()
     conversions = 0
