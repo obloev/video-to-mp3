@@ -22,14 +22,14 @@ async def get_video(message: types.Message):
         return
     video = message.video
     mes = await message.answer('Downloading ...')
-    await video.download(destination_file='video_0.mp4')
+    await video.download(destination_dir=f'media/{message.from_user.id}')
     await mes.edit_text('Converting ...')
-    to_mp3(message.from_user.id, 'video_0.mp4')
+    to_mp3(message.from_user.id)
     await mes.delete()
     await message.answer('Name?', reply_markup=filename_keyboard())
 
 
-@dp.callback_query_handler(filename_cd.filter(bool=True))
+@dp.callback_query_handler(filename_cd.filter(action='yes'))
 async def get_filename_callback(query: types.CallbackQuery):
     await query.answer()
     await query.answer('Type Name?')
@@ -39,19 +39,21 @@ async def get_filename_callback(query: types.CallbackQuery):
 
 @dp.message_handler(state=Audio.get_name)
 async def get_filename(message: types.Message, state: FSMContext):
-    filename: str = f'media/{message.from_user.id}/audios/file_0.mp3'
-    new_filename = f'media/{message.from_user.id}/audios/{message.text}.mp3'
-    os.rename(filename, new_filename)
-    await bot.send_audio(message.from_user.id, new_filename)
+    direct = f'media/{message.from_user.id}/audios'
+    file: str = f'{direct}/{os.listdir(direct)[0]}'
+    new_file = f'{direct}/{message.text}.mp3'
+    os.rename(file, new_file)
+    await bot.send_chat_action(message.from_user.id, 'upload_voice')
+    await bot.send_audio(message.from_user.id, new_file)
     await state.finish()
 
 
-@dp.callback_query_handler(filename_cd.filter(bool=False))
+@dp.callback_query_handler(filename_cd.filter(action='no'))
 async def send_mp3(query: types.CallbackQuery):
-    await query.answer()
     await query.message.delete()
-    filename: str = f'media/{query.from_user.id}/audios/file_0.mp3'
+    direct = f'media/{query.from_user.id}/audios'
+    file: str = f'{direct}/{os.listdir(direct)[0]}'
     mes: types.Message = await query.answer('sending ...')
     await bot.send_chat_action(query.from_user.id, 'upload_voice')
-    await bot.send_audio(query.from_user.id, filename)
+    await bot.send_audio(query.from_user.id, file)
     await mes.delete()

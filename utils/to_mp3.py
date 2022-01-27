@@ -1,12 +1,13 @@
+import os
 from subprocess import Popen
 
 
-def to_mp3(user_id, file):
-    mp4_file = f'{file}'
-    f = open(mp4_file, 'r')
-    f.close()
-    mp3_file = f'file_0.mp3'
-    cmd = f'cmd ffmpeg -i {mp4_file} -vn -acodec copy {mp3_file} -y'
-    print(cmd.split())
+def to_mp3(user_id):
+    direct = f'media/{user_id}/videos'
+    video_file = os.listdir(direct)[0]
+    mp3_file = f"media/{user_id}/audios/{video_file.split('.')[0]}.mp3"
+    os.mkdir(f'media/{user_id}/audios')
+    cmd = f'ffmpeg -i {direct}/{video_file} -codec:a libmp3lame -q:a 0 {mp3_file} -y'
+    print(cmd)
     popen = Popen(cmd.split())
-    popen.terminate()
+    popen.communicate()

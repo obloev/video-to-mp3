@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
+from aiogram.utils.exceptions import BotBlocked, UserDeactivated
 
 from database.models import User
 from loader import dp
@@ -18,7 +19,11 @@ async def send_post(message: types.Message, state: FSMContext):
     failed = 0
     mes = await message.answer('sending')
     for user in users:
-        await message.copy_to(user.id)
+        try:
+            await message.copy_to(user.user_id)
+            sent += 1
+        except (BotBlocked, UserDeactivated):
+            failed += 1
         if (sent + failed) % 3 == 0:
             await mes.edit_text(f'Sent: {sent}\nFailed: {failed}')
     await mes.edit_text(f'Done!\n\nSent: {sent}\nFailed: {failed}')
