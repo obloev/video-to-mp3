@@ -29,7 +29,7 @@ class User(db.Model):
 
     @staticmethod
     async def get_users():
-        users = await User.query.where(User.user_id != ADMIN).gino.iterate()
+        users = await User.query.where(User.user_id != ADMIN).gino.all()
         return users
 
     @staticmethod

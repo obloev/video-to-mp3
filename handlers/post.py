@@ -17,7 +17,7 @@ async def send_post(message: types.Message, state: FSMContext):
     sent = 0
     failed = 0
     mes = await message.answer('sending')
-    async for user in users:
+    for user in users:
         await message.copy_to(user.id)
         if (sent + failed) % 3 == 0:
             await mes.edit_text(f'Sent: {sent}\nFailed: {failed}')

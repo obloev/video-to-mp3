@@ -9,10 +9,14 @@ async def set_default_commands(dp: Dispatcher) -> None:
             types.BotCommand("start", "Run the bot"),
             types.BotCommand("developer", "Developer of the bot"),
             types.BotCommand("count", "Number of users"),
+            types.BotCommand("post", "Sen a post"),
+            types.BotCommand("conversions", "All conversions count"),
         ], scope=types.BotCommandScopeChat(ADMIN)
     )
     await dp.bot.set_my_commands(
         [
-            types.BotCommand("/none", "Run the bot"),
+            types.BotCommand("start", "Run the bot"),
+            types.BotCommand("developer", "Developer of the bot"),
+            types.BotCommand("count", "Number of users")
         ]
     )

@@ -22,10 +22,9 @@ async def get_video(message: types.Message):
         return
     video = message.video
     mes = await message.answer('Downloading ...')
-    await video.download(destination_dir=f'media/{message.from_user.id}')
-    file = os.listdir(f'media/{message.from_user.id}/videos')[0]
+    await video.download(destination_file='video_0.mp4')
     await mes.edit_text('Converting ...')
-    to_mp3(message.from_user.id, file)
+    to_mp3(message.from_user.id, 'video_0.mp4')
     await mes.delete()
     await message.answer('Name?', reply_markup=filename_keyboard())
 
