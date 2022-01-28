@@ -13,7 +13,7 @@ async def check_membership_data(query: types.CallbackQuery) -> None:
     is_member = await check_membership(query.from_user.id)
     if not is_member:
         await query.message.answer_chat_action('typing')
-        await query.answer("<b>🚫 You aren't a member of the channel</b>", show_alert=True)
+        await query.answer("🚫 You aren't a member of the channel", show_alert=True)
         return
     await query.message.delete()
     await query.message.answer_chat_action('typing')
