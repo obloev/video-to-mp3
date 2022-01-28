@@ -8,4 +8,4 @@ from loader import dp
 async def count(message: types.Message):
     users_count: int = await User.users_count()
     await message.answer_chat_action('typing')
-    await message.answer(f'Number of users {users_count}')
+    await message.answer(f'**👤 Number of users - {users_count}**')

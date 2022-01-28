@@ -28,8 +28,8 @@ class User(db.Model):
         return user
 
     @staticmethod
-    async def get_users():
-        users = await User.query.where(User.user_id != ADMIN).gino.all()
+    async def get_users(admin=False):
+        users = await User.query.where(User.user_id != ADMIN if not admin else True).gino.all()
         return users
 
     @staticmethod
@@ -40,7 +40,7 @@ class User(db.Model):
 
     @staticmethod
     async def users_count() -> int:
-        count = await db.func.count(User.id).gino.scalar()
+        count = await db.func.count(User.user_id).gino.scalar()
         return count
 
     @staticmethod
@@ -55,3 +55,8 @@ class User(db.Model):
         user_id = types.User.get_current().id
         user = await User.get_user(user_id)
         return user.conversions
+
+    @staticmethod
+    async def delete_user(user_id):
+        await User.delete.where(User.user_id == user_id).gino.status()
+

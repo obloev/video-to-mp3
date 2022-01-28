@@ -9,4 +9,4 @@ db: Gino = Gino()
 async def connect_db() -> None:
     await db.set_bind(POSTGRES_URI)
     await db.gino.create_all()
-    logging.info('Connected DB')
+    logging.info('Connected to DB')

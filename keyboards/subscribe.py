@@ -6,6 +6,6 @@ from utils.config import JOINCHAT_URL
 
 def subscribe_keyboard() -> types.InlineKeyboardMarkup:
     return types.InlineKeyboardMarkup().row(
-        types.InlineKeyboardButton('..', url=JOINCHAT_URL),
-        types.InlineKeyboardButton('confirm', callback_data=subscribe_cd.new(action='confirm')),
+        types.InlineKeyboardButton('🔗', url=JOINCHAT_URL),
+        types.InlineKeyboardButton('✔️', callback_data=subscribe_cd.new(action='confirm')),
     )
