@@ -12,11 +12,11 @@ async def start(message: types.Message):
     user: types.User = message.from_user
     if await User.get_user(user.id) is None:
         await User.create_user()
-        await bot.send_message(GROUP, f'[{user.full_name}](tg://user?id={user.id}) launched  **THE BOT**')
+        await bot.send_message(GROUP, f'<a href="tg://user?id={user.id}">{user.full_name}</a> launched  **THE BOT**')
     if not await check_membership(user.id):
-        await message.answer(f'**Subscribe to the channel to use the bot [{CHANNEL}]({JOINCHAT_URL})**',
+        await message.answer(f'<b>Subscribe to the channel to use the bot [{CHANNEL}]({JOINCHAT_URL})</b>',
                              reply_markup=subscribe_keyboard())
         return
     await message.answer_chat_action('typing')
-    await message.answer(f'**👋 Hi [{user.full_name}](tg://user?id={user.id}).'
-                         f'This bot converts video files to 🎵 MP3 format**')
+    await message.answer(f'<b>👋 Hi <a href="tg://user?id={user.id}">{user.full_name}</a>.'
+                         f'This bot converts video files to 🎵 MP3 format</b>')

@@ -8,4 +8,4 @@ from loader import dp
 @dp.message_handler(commands=['cancel'], state=Post.get_post)
 async def start(message: types.Message, state: FSMContext):
     await state.finish()
-    await message.reply('❌ **Canceled**')
+    await message.reply('<b>❌ Canceled</b>')

@@ -21,30 +21,30 @@ class Audio(StatesGroup):
 async def get_video(message: types.Message):
     if not await check_membership(message.from_user.id):
         await message.answer_chat_action('typing')
-        await message.answer(f'**Subscribe to the channel to use the bot [{CHANNEL}]({JOINCHAT_URL})**',
+        await message.answer(f'<b>Subscribe to the channel to use the bot <a href="{JOINCHAT_URL}">{CHANNEL}</a></b>',
                              reply_markup=subscribe_keyboard())
         return
     video: types.Video = message.video
     if video.file_size <= 50 * 2 ** 20:
         await message.answer_chat_action('typing')
-        mes: types.Message = await message.answer('📥 Downloading ...')
+        mes: types.Message = await message.reply('<b>📥 Downloading ...</b>')
         await video.download(destination_dir=f'media/{message.from_user.id}')
-        await mes.edit_text('🔄 Converting to 🎵 MP3 ...')
+        await mes.edit_text('<b>🔄 Converting to 🎵 MP3 ...</b>')
         to_mp3(message.from_user.id)
         direct = f'media/{message.from_user.id}/videos'
         os.remove(f'{direct}/{os.listdir(direct)[0]}')
         await mes.delete()
         await message.answer_chat_action('typing')
-        await message.answer('**📝 Do you want to name the 🎵 MP3 file?**', reply_markup=filename_keyboard())
+        await message.reply('<b>📝 Do you want to name the 🎵 MP3 file?</b>', reply_markup=filename_keyboard())
     else:
-        await message.reply("**⚠️ Due to Telegram API limit we can't download video larger than 50 MB."
-                            f"Use {MAIN_BOT}**")
+        await message.reply("<b>⚠️ Due to Telegram API limit we can't download video larger than 50 MB."
+                            f"Use {MAIN_BOT}</b>")
 
 
 @dp.callback_query_handler(filename_cd.filter(action='yes'))
 async def get_filename_callback(query: types.CallbackQuery):
     await query.message.answer_chat_action('typing')
-    await query.message.answer('💬 Type your preferred name for 🎵 the mp3 file')
+    await query.message.answer('<b>💬 Type your preferred name for 🎵 the mp3 file</b>')
     await query.message.delete()
     await Audio.get_name.set()
 
@@ -57,7 +57,7 @@ async def get_filename(message: types.Message, state: FSMContext):
     os.rename(file, new_file)
     await User.add_conversion()
     await message.answer_chat_action('typing')
-    mes: types.Message = await message.answer('**📤 Sending ...**')
+    mes: types.Message = await message.answer('<b>📤 Sending ...</b>>')
     await message.answer_chat_action('upload_voice')
     with open(new_file, 'rb') as audio:
         bot_info = await bot.get_me()
@@ -76,7 +76,7 @@ async def send_mp3(query: types.CallbackQuery):
     direct: str = f'media/{query.from_user.id}/audios'
     file: str = f'{direct}/{os.listdir(direct)[0]}'
     await query.message.answer_chat_action('typing')
-    mes: types.Message = await query.message.answer('**📤 Sending ...**')
+    mes: types.Message = await query.message.answer('<b>📤 Sending ...</b>>')
     await query.message.answer_chat_action('upload_voice')
     with open(file, 'rb') as audio:
         bot_info = await bot.get_me()
