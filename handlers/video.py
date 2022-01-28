@@ -49,7 +49,9 @@ async def get_filename(message: types.Message, state: FSMContext):
     os.rename(file, new_file)
     await User.add_conversion()
     await message.answer_chat_action('upload_voice')
-    await bot.send_audio(message.from_user.id, new_file)
+    with open(new_file, 'rb') as audio:
+        await bot.send_audio(message.from_user.id, audio)
+        audio.close()
     await state.finish()
     os.rmdir(f'media/{message.from_user.id}')
 
@@ -63,6 +65,8 @@ async def send_mp3(query: types.CallbackQuery):
     await query.message.answer_chat_action('typing')
     mes: types.Message = await query.message.answer('sending ...')
     await query.message.answer_chat_action('upload_voice')
-    await bot.send_audio(query.from_user.id, file)
+    with open(file, 'rb') as audio:
+        await bot.send_audio(query.from_user.id, audio)
+        audio.close()
     await mes.delete()
     os.rmdir(f'media/{query.from_user.id}')
