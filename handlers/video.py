@@ -28,6 +28,8 @@ async def get_video(message: types.Message):
     await video.download(destination_dir=f'media/{message.from_user.id}')
     await mes.edit_text('Converting ...')
     to_mp3(message.from_user.id)
+    direct = f'media/{message.from_user.id}/videos'
+    os.remove(f'{direct}/{os.listdir(direct)[0]}')
     await mes.delete()
     await message.answer_chat_action('typing')
     await message.answer('Name?', reply_markup=filename_keyboard())
@@ -53,7 +55,7 @@ async def get_filename(message: types.Message, state: FSMContext):
         await bot.send_audio(message.from_user.id, audio)
         audio.close()
     await state.finish()
-    os.rmdir(f'media/{message.from_user.id}')
+    os.remove(new_file)
 
 
 @dp.callback_query_handler(filename_cd.filter(action='no'))
@@ -69,4 +71,4 @@ async def send_mp3(query: types.CallbackQuery):
         await bot.send_audio(query.from_user.id, audio)
         audio.close()
     await mes.delete()
-    os.rmdir(f'media/{query.from_user.id}')
+    os.remove(file)
