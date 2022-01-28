@@ -61,8 +61,8 @@ async def get_filename(message: types.Message, state: FSMContext):
     await message.answer_chat_action('upload_voice')
     with open(new_file, 'rb') as audio:
         bot_info = await bot.get_me()
-        await bot.send_audio(message.from_user.id, audio, performer=bot_info.username,
-                             caption=f'🎵 {bot_info.username}')
+        await bot.send_audio(message.from_user.id, audio, performer=f'@{bot_info.username}',
+                             caption=f'🎵 @{bot_info.username}')
         audio.close()
     await mes.delete()
     await state.finish()
