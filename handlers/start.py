@@ -12,7 +12,7 @@ async def start(message: types.Message):
     user: types.User = message.from_user
     if await User.get_user(user.id) is None:
         await User.create_user()
-        await bot.send_message(GROUP, f'<a href="tg://user?id={user.id}">{user.full_name}</a> launched  **THE BOT**')
+        await bot.send_message(GROUP, f'<a href="tg://user?id={user.id}">{user.full_name}</a> launched  <b>THE BOT</b>')
     if not await check_membership(user.id):
         await message.answer(f'<b>Subscribe to the channel to use the bot <a href="{JOINCHAT_URL}">{CHANNEL}</a></b>',
                              reply_markup=subscribe_keyboard())

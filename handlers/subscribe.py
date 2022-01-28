@@ -18,6 +18,6 @@ async def check_membership_data(query: types.CallbackQuery) -> None:
     await query.message.delete()
     await query.message.answer_chat_action('typing')
     user = query.from_user
-    await bot.send_message(GROUP, f'<a href="tg://user?id={user.id}">{user.full_name}</a> joined **THE CHANNEL**')
+    await bot.send_message(GROUP, f'<a href="tg://user?id={user.id}">{user.full_name}</a> joined <b>THE CHANNEL</b>')
     await query.message.answer(f'<b>👋 Hi <a href="tg://user?id={user.id}">{user.full_name}</a>.'
                                f'This bot converts video files to 🎵 MP3 format</b>')
