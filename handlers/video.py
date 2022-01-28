@@ -57,7 +57,7 @@ async def get_filename(message: types.Message, state: FSMContext):
     os.rename(file, new_file)
     await User.add_conversion()
     await message.answer_chat_action('typing')
-    mes: types.Message = await message.answer('<b>📤 Sending ...</b>>')
+    mes: types.Message = await message.answer('<b>📤 Sending ...</b>')
     await message.answer_chat_action('upload_voice')
     with open(new_file, 'rb') as audio:
         bot_info = await bot.get_me()
@@ -76,12 +76,12 @@ async def send_mp3(query: types.CallbackQuery):
     direct: str = f'media/{query.from_user.id}/audios'
     file: str = f'{direct}/{os.listdir(direct)[0]}'
     await query.message.answer_chat_action('typing')
-    mes: types.Message = await query.message.answer('<b>📤 Sending ...</b>>')
+    mes: types.Message = await query.message.answer('<b>📤 Sending ...</b>')
     await query.message.answer_chat_action('upload_voice')
     with open(file, 'rb') as audio:
         bot_info = await bot.get_me()
-        await bot.send_audio(query.from_user.id, audio, performer=bot_info.username,
-                             caption=f'🎵 {bot_info.username}')
+        await bot.send_audio(query.from_user.id, audio, performer=f'@{bot_info.username}',
+                             caption=f'🎵 @{bot_info.username}')
         audio.close()
     await mes.delete()
     os.remove(file)
