@@ -25,7 +25,7 @@ async def get_video(message: types.Message):
                              reply_markup=subscribe_keyboard())
         return
     video: types.Video = message.video
-    if video.file_size <= 50 * 2 ** 20:
+    if video.file_size <= 20 * 2 ** 20:
         await message.answer_chat_action('typing')
         mes: types.Message = await message.reply('<b>📥 Downloading ...</b>')
         await video.download(destination_dir=f'media/{message.from_user.id}')
@@ -37,7 +37,7 @@ async def get_video(message: types.Message):
         await message.answer_chat_action('typing')
         await message.reply('<b>📝 Do you want to name the 🎵 MP3 file?</b>', reply_markup=filename_keyboard())
     else:
-        await message.reply("<b>⚠️ Due to Telegram API limit we can't download video larger than 50 MB."
+        await message.reply("<b>⚠️ Due to Telegram API limit we can't download video larger than 20 MB."
                             f"Use {MAIN_BOT}</b>")
 
 
